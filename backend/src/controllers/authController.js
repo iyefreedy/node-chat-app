@@ -11,10 +11,18 @@ const signIn = async (req, res) => {
 		return res.status(401).send("Invalid credential");
 	}
 
-	const privateKey = fs.readFile(
+	let privateKey = ''
+
+	fs.readFile(
 		"./private.pem",
 		{ encoding: "utf-8" },
-		(err, data) => {}
+		(err, data) => {
+			if (err) {
+				throw new Error("Error while read data from file")
+			}
+
+			privateKey = data;
+		}
 	);
 	console.log(privateKey);
 
