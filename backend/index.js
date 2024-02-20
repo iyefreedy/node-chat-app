@@ -1,69 +1,37 @@
-import express from 'express'
-import { createServer } from 'node:http'
-import mongoose from 'mongoose';
+const express = require("express");
+const { createServer } = require("node:http");
+const mongoose = require("mongoose");
 
-import User from './src/models/user.js';
+require("dotenv").config();
 
-const app = express()
+const userRoutes = require("./src/routes/userRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+
+const app = express();
 const server = createServer(app);
 
-app.use(express.json())
+app.use(express.json());
 
-
-
-app.get('/', (req, res) => {
-    return res.status(200).json({
-        "message": "Chat App v0.1"
-    })
-})
-
-app.get('/users', async (req, res) => {
-    const users = await User.find()
-    return res.status(200).json({
-        data: users
-    });
-})
-
-app.get('/users/:id', async (req, res) => {
-    const { id } = req.params;
-    const user = await User.findById(id)
-    return res.status(200).json({
-        data: user
-    });
-})
-
-app.post('/users', async (req, res) => {
-    const user = new User({ ...req.body })
-    const insertedUser = await user.save();
-
-    return res.status(201).json(insertedUser);
-})
-
-app.put('/users/:id', async (req, res) => {
-    const { id } = req.params;
-
-    await User.updateOne({ id }, req.body);
-    const updatedUser = await User.findById(id);
-    return res.status(200).json(updatedUser);
-})
-
-app.delete("/users/:id", async (req, res) => {
-    const { id } = req.params;
-    const deletedUser = await User.findByIdAndDelete(id);
-    return res.status(200).json(deletedUser);
+app.get("/", (req, res) => {
+	return res.status(200).json({
+		message: "Chat App v0.1",
+	});
 });
 
+app.use(authRoutes);
+app.use("/api", userRoutes);
+
 const start = async () => {
-    try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/chat-app')
+	try {
+		await mongoose.connect("mongodb://127.0.0.1:27017/chat-app");
 
-        server.listen(3000, () => {
-            console.log(`Server running at http://localhost:3000`);
-        })
-    } catch (error) {
-        console.error(error);
-        process.exit(1);
-    }
-}
+		server.listen(3000, () => {
+			console.log(`Server running at http://localhost:3000`);
+		});
+	} catch (error) {
+		console.error(error);
+		process.exit(1);
+	}
+};
 
-start()
+start();
