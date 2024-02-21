@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import reactLogo from "../assets/react.svg";
 
-export default function Index() {
+const Chat = () => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
 
@@ -20,9 +21,8 @@ export default function Index() {
                         <img src={reactLogo} alt="React Logo" />
                     </Link>
 
-                    <div className="flex items-center gap-3">
-                        <Link to={"/login"}>Login</Link>
-                        <a href="#">Register</a>
+                    <div>
+                        <Link to={"/"}>Logout</Link>
                     </div>
                 </div>
             </nav>
@@ -30,7 +30,7 @@ export default function Index() {
             <main>
                 <ul>
                     {messages.map((msg) => (
-                        <li>{msg}</li>
+                        <li key={msg}>{msg}</li>
                     ))}
                 </ul>
 
@@ -45,9 +45,11 @@ export default function Index() {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                    <button className="p-2 bg-teal-700">Send</button>
+                    <button className="p-2 bg-teal-700 text-white">Send</button>
                 </form>
             </main>
         </>
     );
-}
+};
+
+export default Chat;
