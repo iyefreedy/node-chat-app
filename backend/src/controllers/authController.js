@@ -6,34 +6,33 @@ const User = require("../models/user");
 const signIn = async (req, res) => {
 	const { email, password } = req.body;
 
-	console.log(email, password)
+	console.log(email, password);
 
 	const foundUser = await User.findOne({ email: email }).exec();
 	if (!foundUser || !(await foundUser.validatePassword(password))) {
 		return res.status(401).json({
-			message: "Invalid credential"
+			message: "Invalid credential",
 		});
 	}
 
-	let privateKey = fs.readFileSync(
-		"./private.pem",
-		{ encoding: "utf-8" },
-
-	);
+	let privateKey = fs.readFileSync("./private.pem", { encoding: "utf-8" });
 
 	const payload = {
 		uid: foundUser._id.toString(),
 		name: foundUser.name,
-	}
+	};
 
 	const token = jwt.sign(payload, privateKey, {
 		algorithm: "RS256",
 		expiresIn: "15m",
 		audience: "http://localhost:5173",
-		issuer: "http://localhost:3000"
+		issuer: "http://localhost:3000",
 	});
 
+	res.cookie("access_token", token);
 	return res.status(200).json({
+		response_code: 200,
+		message: "Successful",
 		access_token: token,
 	});
 };

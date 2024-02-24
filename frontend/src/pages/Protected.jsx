@@ -3,11 +3,12 @@ import { Navigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 const Protected = () => {
-    const { user } = useAuth();
+	const { user } = useAuth();
 
-    if (!user) return <Navigate to={"/login"} replace />;
+	console.log(user);
+	if (!user) return <Navigate to={"/login"} replace />;
 
-    return <Outlet />;
+	return <Outlet />;
 };
 
 export default Protected;

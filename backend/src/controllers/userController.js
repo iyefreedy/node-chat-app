@@ -2,6 +2,7 @@ const User = require("../models/user");
 
 const getUsers = async (req, res) => {
 	const users = await User.find();
+	console.log(req.cookies);
 	return res.status(200).json({
 		data: users,
 	});

@@ -1,26 +1,23 @@
-async function login(email, password) {
+async function login(credential) {
+	const { email, password } = credential;
 
-    const response = await (await fetch("http://localhost:3000/login", {
-        method: "POST",
-        body: JSON.stringify({
-            email: email,
-            password: password
-        }),
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })).json()
-
-    return response;
+	const response = await fetch("http://localhost:3000/login", {
+		method: "POST",
+		body: JSON.stringify({
+			email: email,
+			password: password,
+		}),
+		credentials: "include",
+		mode: "cors",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return response;
 }
 
 async function logout() {
-    console.log('Logout')
+	console.log("Logout");
 }
 
-async function checkAuthStatus() {
-
-}
-
-export default { login, logout, checkAuthStatus }
+export default { login, logout };
